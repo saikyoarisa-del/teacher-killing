@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#101425">
+<title>桜○学校教師討伐録</title>
+<style>
+:root{--bg:#0b1020;--panel:#151c31;--panel2:#1d2742;--line:#3c4a70;--txt:#f7f8ff;--muted:#aeb8d2;--accent:#a78bfa;--good:#4ade80;--bad:#fb7185;--gold:#fbbf24}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#080b15;color:var(--txt);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;height:100%;overflow:hidden}
+button{font:inherit;color:inherit}
+#app{height:100dvh;display:flex;justify-content:center;background:radial-gradient(circle at 50% -10%,#26345e 0,#0b1020 48%,#070a12 100%)}
+.screen{width:min(760px,100%);height:100%;position:relative;display:flex;flex-direction:column}
+.hidden{display:none!important}
+#title{justify-content:center;align-items:center;padding:22px;text-align:center;overflow:auto}
+.logo{font-weight:900;letter-spacing:.04em;font-size:clamp(30px,8vw,56px);line-height:1.05;text-shadow:0 5px 0 #272d4d,0 12px 28px #000}
+.sub{color:#c6cce0;margin:10px 0 26px;font-size:14px}
+.title-card{width:min(560px,100%);border:1px solid #4d5a82;background:#12182b;border-radius:24px;padding:14px;box-shadow:0 20px 60px #0008}
+.title-img{height:220px;border-radius:17px;background-image:none;background-size:100% 300%;background-position:center top;background-repeat:no-repeat;border:1px solid #4a5679}
+.start{margin-top:16px;width:100%;padding:16px;border:0;border-radius:15px;background:linear-gradient(135deg,#8b5cf6,#ec4899);font-weight:900;font-size:18px;box-shadow:0 8px 25px #8b5cf655}
+.small{font-size:12px;color:#9da8c4;margin-top:12px}
+#game{padding:10px;gap:9px;overflow:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;background:#10172a;border:1px solid var(--line);border-radius:14px;padding:9px 12px;flex:0 0 auto}
+.badge{font-size:12px;color:#cbd5ff}.turn{font-weight:800;color:#f5d0fe}
+.arena{flex:1 1 auto;min-height:0;border:1px solid var(--line);border-radius:18px;background:#0e1426;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.boss-art img.boss-character{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}.boss-art:after{z-index:1}.boss-tag,.hpwrap{z-index:2}.boss-art{flex:1 1 auto;min-height:0;background-image:none;background-size:100% 300%;background-repeat:no-repeat;background-position:center top;position:relative}
+.boss-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,#080b15ee 100%)}
+.boss-tag{position:absolute;left:12px;bottom:12px;z-index:2;background:#090d19cc;border:1px solid #59678f;border-radius:12px;padding:8px 10px;backdrop-filter:blur(5px)}
+.boss-name{font-weight:900;font-size:20px}.boss-title{font-size:11px;color:#b9c4e2}
+.hpwrap{position:absolute;right:12px;bottom:12px;width:min(48%,300px);z-index:2}
+.bar{height:14px;background:#272d40;border-radius:99px;overflow:hidden;border:1px solid #4a5471}.fill{height:100%;transition:width .35s}
+.bossfill{background:linear-gradient(90deg,#fb7185,#ef4444)}.playerfill{background:linear-gradient(90deg,#34d399,#22c55e)}.mpfill{background:linear-gradient(90deg,#60a5fa,#6366f1)}
+.stats{font-size:11px;display:flex;justify-content:space-between;margin-bottom:4px;color:#dbe2f4}
+.log{height:104px;flex:0 0 auto;background:#0a0f1d;border-top:1px solid #313d60;padding:9px 11px;overflow:auto;font-size:13px;line-height:1.45}
+.log p{margin:0 0 4px}.log .system{color:#a5b4fc}.log .hit{color:#fecaca}.log .good{color:#bbf7d0}.log .warn{color:#fde68a}
+.player{flex:0 0 auto;background:#11182a;border:1px solid var(--line);border-radius:16px;padding:9px}
+.playerrow{display:flex;gap:9px;align-items:center;margin-bottom:8px}
+.playername{font-weight:900;font-size:14px}.pstats{margin-left:auto;width:48%;max-width:260px}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.controls button{min-height:52px;border:1px solid #465476;background:#1a2440;border-radius:12px;font-weight:800;font-size:13px}
+.controls button:active{transform:scale(.97);background:#26345a}
+.controls button[disabled]{opacity:.42}
+.skill{font-size:11px;color:#b7c1dd;font-weight:500;display:block;margin-top:2px}
+.overlay{position:absolute;inset:0;background:#050814d9;z-index:20;display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(7px)}
+.modal{width:min(560px,100%);max-height:90%;overflow:auto;background:#11182a;border:1px solid #566589;border-radius:20px;padding:18px;box-shadow:0 30px 80px #000a}
+.modal h2{margin:0 0 10px}.modal p{color:#bac4dc;line-height:1.6;font-size:14px}
+.modal button{width:100%;margin-top:8px;padding:13px;border-radius:12px;border:1px solid #4b5a80;background:#1b2642;font-weight:800}
+.modal .primary{background:linear-gradient(135deg,#7c3aed,#db2777);border:0}
+.choices{display:grid;gap:8px;margin-top:12px}.choice{text-align:left}
+.footer{color:#7783a3;font-size:11px;text-align:center;margin-top:10px}
+@media (max-height:700px){.boss-art{min-height:230px}.log{height:82px}.controls button{min-height:46px}.title-img{height:170px}}
+</style>
+</head>
+<body>
+<div id="app">
+<section id="title" class="screen">
+  <div class="logo">桜○学校<br>教師討伐録</div>
+  <div class="sub">3人のクセ強教師を突破せよ。スマホ対応・完全オリジナル戦闘RPG。</div>
+  <div class="title-card">
+    <div class="title-img"></div>
+    <button class="start" onclick="startGame()">▶ ゲーム開始</button>
+    <div class="small">※このゲームはフィクションです。画像は提供されたキャラクター素材を使用しています。</div>
+  </div>
+</section>
+
+<section id="game" class="screen hidden">
+  <div class="topbar">
+    <span class="badge" id="stage">STAGE 1 / 3</span>
+    <span class="turn" id="turn">あなたのターン</span>
+    <button onclick="openHelp()" style="background:none;border:0;color:#aab6d2;font-size:12px">？</button>
+  </div>
+  <div class="arena">
+    <div id="bossArt" class="boss-art">
+      <img id="bossCharacter" class="boss-character" alt="">
+      <div class="boss-tag"><div id="bossName" class="boss-name"></div><div id="bossTitle" class="boss-title"></div></div>
+      <div class="hpwrap"><div class="stats"><span>TEACHER HP</span><span id="bossHpText"></span></div><div class="bar"><div id="bossHp" class="fill bossfill"></div></div></div>
+    </div>
+    <div id="log" class="log"></div>
+  </div>
+  <div class="player">
+    <div class="playerrow">
+      <div><div class="playername">あなた</div><div class="badge" id="status">状態：正常</div></div>
+      <div class="pstats">
+        <div class="stats"><span>HP</span><span id="playerHpText"></span></div><div class="bar"><div id="playerHp" class="fill playerfill"></div></div>
+        <div style="height:5px"></div>
+        <div class="stats"><span>MP</span><span id="playerMpText"></span></div><div class="bar"><div id="playerMp" class="fill mpfill"></div></div>
+      </div>
+    </div>
+    <div class="controls">
+      <button onclick="act('attack')">⚔ 攻撃<span class="skill">安定した一撃</span></button>
+      <button onclick="act('skill')">✨ 必殺技<span class="skill">気合の一発 / 18MP</span></button>
+      <button onclick="act('guard')">🛡 防御<span class="skill">次の被ダメ軽減</span></button>
+      <button onclick="act('item')">🍙 回復<span class="skill">HP +35 / 1回</span></button>
+    </div>
+  </div>
+  <div id="overlay" class="overlay hidden"><div id="modal" class="modal"></div></div>
+</section>
+</div>
+
+<script>
+const bosses=[
+ {name:"岩崎千尋",title:"数学教師・白目300回",img:"__IMG_IWASAKI__",max:120,atk:13,def:3,
+  intro:"数学教師・岩崎千尋が立ちはだかった！",
+  quote:"「スマホ？　授業中なら没収です。」",
+  skills:["白目の威圧","スマホ没収","反省文"],
+  special:["白目の威圧","スマホ没収","反省文"]},
+ {name:"田丸",title:"音楽教師・報告します！",img:"__IMG_TAMARU__",max:140,atk:15,def:4,
+  intro:"音楽教師・田丸が軽快に現れた！",
+  quote:"「岩崎先生に報告しておきます！」",
+  skills:["X投稿","報告します！","リズム攻撃"],
+  special:["X投稿","報告します！","リズム攻撃"]},
+ {name:"篠崎",title:"国語教師・ムオッ!!",img:"__IMG_SHINOZAKI__",max:165,atk:17,def:5,
+  intro:"国語教師・篠崎が最後の壁として現れた！",
+  quote:"「ムオッ!!」",
+  skills:["キノコ談義","仮面ライダー愛","ムオッ!!"],
+  special:["キノコ談義","仮面ライダー愛","ムオッ!!"]}
+];
+
+let S={stage:0,boss:null,pHp:120,pMax:180,mp:80,mMax:80,guard:false,items:5,playerAtk:32,debuff:0,busy:false};
+const $=id=>document.getElementById(id);
+function log(t,c=""){const e=document.createElement("p");e.className=c;e.textContent=t;$("log").appendChild(e);$("log").scrollTop=99999}
+function startGame(){
+ $("title").classList.add("hidden");$("game").classList.remove("hidden");
+ S={stage:0,boss:null,pHp:120,pMax:180,mp:80,mMax:80,guard:false,items:5,playerAtk:32,debuff:0,busy:false};
+ loadBoss(); log("放課後、あなたは教師たちの討伐に挑むことになった。","system");
+}
+function loadBoss(){
+ const b=bosses[S.stage]; S.boss={...b,hp:b.max}; S.guard=false; S.debuff=0;
+ $("stage").textContent=`STAGE ${S.stage+1} / 3`;
+ $("bossCharacter").src = b.img;
+ $("bossName").textContent=b.name;$("bossTitle").textContent=b.title;
+ $("log").innerHTML="";log(b.intro,"system");log(b.quote,"warn");update();
+}
+function update(){
+ const b=S.boss;
+ $("bossHp").style.width=Math.max(0,b.hp/b.max*100)+"%";$("bossHpText").textContent=`${Math.max(0,b.hp)} / ${b.max}`;
+ $("playerHp").style.width=Math.max(0,S.pHp/S.pMax*100)+"%";$("playerHpText").textContent=`${Math.max(0,S.pHp)} / ${S.pMax}`;
+ $("playerMp").style.width=Math.max(0,S.mp/S.mMax*100)+"%";$("playerMpText").textContent=`${S.mp} / ${S.mMax}`;
+ $("status").textContent="状態："+(S.debuff>0?"集中力低下":"正常")+(S.guard?" / 防御中":"");
+ document.querySelectorAll(".controls button").forEach(x=>x.disabled=S.busy);
+}
+function act(type){
+ if(S.busy||S.boss.hp<=0)return; S.busy=true; update();
+ if(type==="attack"){
+   let dmg=rand(24,34)+Math.floor(S.playerAtk/4);dmg=Math.max(1,dmg-S.boss.def);
+   if(Math.random()<.12){dmg*=2;log(`クリティカル！ ${dmg} ダメージ！`,"good")}else log(`${S.boss.name}に ${dmg} ダメージ！`,"good");
+   S.boss.hp-=dmg;
+ }else if(type==="skill"){
+   if(S.mp<18){log("MPが足りない！","warn");S.busy=false;update();return}
+   S.mp-=18;let dmg=rand(48,62)+S.playerAtk; 
+   if(S.debuff>0)dmg-=5; dmg=Math.max(1,dmg-S.boss.def);
+   log(`必殺技が炸裂！ ${dmg} ダメージ！`,"good");S.boss.hp-=dmg;
+ }else if(type==="guard"){
+   S.guard=true;log("身構えた。次の攻撃のダメージを大きく軽減する。","system");
+ }else if(type==="item"){
+   if(S.items<=0){log("回復アイテムはもうない！","warn");S.busy=false;update();return}
+   S.items--;let heal=55;S.pHp=Math.min(S.pMax,S.pHp+heal);log(`おにぎりでHPが ${heal} 回復した！`,"good");
+ }
+ update();
+ setTimeout(()=>afterPlayer(),450);
+}
+function afterPlayer(){
+ if(S.boss.hp<=0){winBoss();return}
+ $("turn").textContent="教師のターン…";setTimeout(enemyTurn,550);
+}
+function enemyTurn(){
+ const b=S.boss;let move=b.special[rand(0,b.special.length-1)];
+ let dmg=rand(Math.floor(b.atk*.45),b.atk+2);
+ if(move==="白目の威圧"){dmg+=2;S.debuff=2;log(`${b.name}の「白目の威圧」！ 集中力が乱された！`,"hit")}
+ else if(move==="スマホ没収"){dmg+=1;log(`${b.name}の「スマホ没収」！`,"hit")}
+ else if(move==="反省文"){dmg+=1;log(`${b.name}の「反省文」！ 長文攻撃だ！`,"hit")}
+ else if(move==="X投稿"){log(`${b.name}がXに意味深な投稿をした！`,"hit");dmg+=5}
+ else if(move==="報告します！"){log(`「岩崎先生に報告しておきます！」`,"hit");dmg+=8}
+ else if(move==="リズム攻撃"){log(`${b.name}の「リズム攻撃」！`,"hit");dmg+=3}
+ else if(move==="キノコ談義"){log(`${b.name}の「キノコ談義」！ 話が長い！`,"hit");dmg+=4}
+ else if(move==="仮面ライダー愛"){log(`${b.name}の「仮面ライダー愛」！ 熱量がすごい！`,"hit");dmg+=6}
+ else if(move==="ムオッ!!"){log(`${b.name}の「ムオッ!!」！`,"hit");dmg+=10}
+ dmg=Math.max(1,dmg);
+ if(S.guard){dmg=Math.ceil(dmg*.35);log(`防御が間に合い、ダメージを ${dmg} に抑えた！`,"good");S.guard=false}
+ else log(`あなたは ${dmg} ダメージ受けた。`,"hit");
+ S.pHp-=dmg;if(S.debuff>0)S.debuff--;
+ $("turn").textContent="あなたのターン";update();
+ if(S.pHp<=0){gameOver();return}
+ S.busy=false;update();
+}
+function winBoss(){
+ $("turn").textContent="勝利！";update();
+ setTimeout(()=>{
+   if(S.stage<2){
+    const next=S.boss.name;
+    showModal(`<h2>🎉 ${next}を突破！</h2><p>討伐報酬としてHPが25、MPが15回復した。</p><p>次なる教師が待っている……。</p><button class="primary" onclick="nextBoss()">次の教師へ ▶</button>`);
+   }else showModal(`<h2>🏆 全教師討伐達成！</h2><p>桜○学校の平穏が戻った！</p><p>あなたは3人のクセ強教師を見事に突破した。</p><button class="primary" onclick="location.reload()">タイトルへ</button>`);
+ },350);
+}
+function nextBoss(){closeModal();S.stage++;S.pHp=Math.min(S.pMax,S.pHp+55);S.mp=Math.min(S.mMax,S.mp+30);S.busy=false;loadBoss();$("turn").textContent="あなたのターン"}
+function gameOver(){showModal(`<h2>📚 補習決定……</h2><p>HPが0になってしまった。教師たちの授業はまだ終わらない。</p><button class="primary" onclick="retry()">もう一度挑戦</button>`)}
+function retry(){closeModal();S.stage=0;S.pHp=S.pMax;S.mp=S.mMax;S.items=5;S.busy=false;loadBoss();$("turn").textContent="あなたのターン"}
+function showModal(html){$("modal").innerHTML=html;$("overlay").classList.remove("hidden")}
+function closeModal(){$("overlay").classList.add("hidden")}
+function openHelp(){showModal(`<h2>遊び方</h2><p>「攻撃」「必殺技」「防御」「回復」の4コマンドで3人の教師を順番に突破します。</p><p>必殺技はMP18を消費します。防御は次に受けるダメージを大幅に軽減。回復アイテムは3個です。</p><button class="primary" onclick="closeModal()">閉じる</button>`)}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+</script>
+</body>
+</html>
