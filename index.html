@@ -155,7 +155,7 @@ function act(type){
    S.guard=true;log("身構えた。次の攻撃のダメージを大きく軽減する。","system");
  }else if(type==="item"){
    if(S.items<=0){log("回復アイテムはもうない！","warn");S.busy=false;update();return}
-   S.items--;let heal=55;S.pHp=Math.min(S.pMax,S.pHp+heal);log(`おにぎりでHPが ${heal} 回復した！`,"good");
+   S.items--;let heal=100;S.pHp=Math.min(S.pMax,S.pHp+heal);log(`おにぎりでHPが ${heal} 回復した！`,"good");
  }
  update();
  setTimeout(()=>afterPlayer(),450);
